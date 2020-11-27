@@ -1,0 +1,5 @@
+name: AdvancedRespawn
+main: me.theredcat.betterespawn.Main
+author: TheRedCat
+version: 1.0
+depend: [HolographicDisplays]
