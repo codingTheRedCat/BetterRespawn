@@ -1,13 +1,10 @@
 package me.theredcat.betterespawn;
 
+import me.theredcat.betterespawn.config.Config;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -26,35 +23,53 @@ public class Main extends JavaPlugin {
 			return;
 		}
 
-		FileConfiguration config = getConfig();
-
-		Config.headName = config.getString("items.player-head-name").replace('&','§');
+		Config.load(getConfig());
 
 		getServer().getPluginManager().registerEvents(new EventListener(), this);
 		instance = this;
+
+		System.out.println(getConfig().getKeys(true));
 	}
-	
+
 	@Override
 	public void onDisable() {
-		DeathChests.chests.forEach(c -> c.drop());
+		Bukkit.getScheduler().cancelTasks(this);
+
+		for (DeadPlayer player:DeadPlayer.deadPlayers){
+			player.respawn();
+		}
+
+		for (Skull skull : Skull.skulls.values()){
+			skull.drop();
+		}
 	}
-	
-	public static ItemStack getSkull(OfflinePlayer p) {
-		ItemStack is=new ItemStack(Material.PLAYER_HEAD);
-		
-		SkullMeta meta = (SkullMeta)is.getItemMeta();
-		
-		meta.setDisplayName(Config.headName.replace("%player%", p.getName()));
-		meta.setOwningPlayer(p);
-		
-		is.setItemMeta(meta);
-		
-		return is;
-	}
-	
-	public static void playPlayerDeath(Player p) {
-		
-		p.getWorld().strikeLightningEffect(p.getLocation());
-		
+
+	@Override
+	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+
+		if (command.getName().equalsIgnoreCase("respawninstant")) {
+			if (!sender.hasPermission("betterespawn.command.respawninstant")) {
+				sender.sendMessage(Config.commandPermissionDeny);
+				return true;
+			}
+
+			if (!(sender instanceof Player)) {
+				sender.sendMessage(Config.commandBadUse);
+				return true;
+			}
+
+			Player player = (Player) sender;
+
+			if (DeadPlayer.isDead(player)) {
+				DeadPlayer deadPlayer = DeadPlayer.getDeadPlayer(player);
+
+				deadPlayer.cancel();
+				deadPlayer.respawn();
+			} else {
+				sender.sendMessage(Config.commandAlive);
+			}
+
+		}
+		return true;
 	}
 }

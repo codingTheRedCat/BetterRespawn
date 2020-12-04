@@ -1,5 +1,9 @@
-name: AdvancedRespawn
+name: BetterRespawn
 main: me.theredcat.betterespawn.Main
-author: TheRedCat
-version: 1.0
+authors: [TheRedCat,MaxThe777]
+version: 1.0.0
 depend: [HolographicDisplays]
+api-version: 1.16
+commands:
+  respawninstant:
+    description: Instantly respawns player if is dead.
