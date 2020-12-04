@@ -1,0 +1,2 @@
+# BetterRespawn
+Advanced respawn plugin
