@@ -1,0 +1,46 @@
+settings:
+  deafult-spawn-world: "world"
+  # seconds
+  death-chest-expire: 1200
+  enable-death-messages:
+    public: true
+    private: true
+  call-death-event: true
+  dropped-xd-amount: 0.5
+  respawn-time: 30
+ui:
+  items:
+    # Params: %player%
+    player-head-name: "&6&l§6%player%&7's head"
+  holograms:
+    # Params: %time%
+    death-chest-hologram-text:
+      - "&c&lExpires in"
+      - "&b%time%"
+    height: 1.5
+  messages:
+    # Params for all in this section: %victim%
+    death-messages:
+      # Params: %killer%
+      shot-by-entity: "&6%victim% &bhas been shot by &c%killer%&b."
+      # No additional params
+      shot: "&6%victim% &bhas been shot."
+      # Params: %killer%
+      killed-by-entity: "&6%victim% &bhas been slain by &c%killer%&b."
+      # No additional params
+      death: "&6%victim% &bdied."
+      # Params: %x%, %y%, %z%
+      private-message: "&c&lYou died at &bX: &7%x% &bY: &7%y% &bZ: &7%z%&c&l."
+    head-messages:
+      destroy: "&c&lYour DeathHead has expired!"
+      collect: "&aYou have broken your DeathHead. Your items have been dropped."
+      collect-other: "&c&lSomeone has broken your DeathHead!"
+    respawn:
+      # Params: %time%
+      action-bar-remaining: "&b&lYOU WILL RESPAWN in %time%"
+      respawn-message: "&aYou have been respawned."
+      # respawninstant requires betterespawn.command.respawninstant
+      instant-respawn:
+        permission-deny: "&cYou doesn't have permission for that!"
+        already-alive: "&cYou can't respawn if you're alive!"
+        only-players: "&cOnly players can use this command!"
