@@ -7,12 +7,12 @@ import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockFromToEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -25,10 +25,27 @@ public class EventListener implements Listener {
     @EventHandler
     public void onFluidFlow(BlockFromToEvent event){
 
-        if (event.getToBlock().getType().equals(Material.PLAYER_HEAD)){
+        if (Material.PLAYER_HEAD.equals(event.getToBlock().getType())){
             event.setCancelled(true);
         }
 
+    }
+
+    @EventHandler
+    public void onExplosion(BlockExplodeEvent e){
+        e.blockList().removeIf(block -> Material.PLAYER_HEAD.equals(block.getType()));
+    }
+
+    @EventHandler
+    public void onExplosion(EntityExplodeEvent e){
+        e.blockList().removeIf(block -> Material.PLAYER_HEAD.equals(block.getType()));
+    }
+
+    @EventHandler
+    public void onEntityBlockChange(EntityChangeBlockEvent event){
+        if (Material.PLAYER_HEAD.equals(event.getBlock().getType())){
+            event.setCancelled(true);
+        }
     }
 
     @EventHandler
@@ -65,7 +82,7 @@ public class EventListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onDamage(EntityDamageEvent event){
 
         if(event instanceof EntityDamageByEntityEvent){
